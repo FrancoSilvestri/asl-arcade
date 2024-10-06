@@ -14,7 +14,7 @@ def stream_frame():
     
     frame_data = data.get("frame", None)
     target = data.get("target", None)
-    print(data)
+    
     if frame_data is None or target is None:
         return jsonify({"error":"No frame nor target provided."}), 400
 
@@ -25,7 +25,7 @@ def stream_frame():
     frame = cv2.imdecode(img, cv2.IMREAD_COLOR)
 
     h, w, c = frame.shape
-    CONF_THRESHOLD = 0.7
+    CONF_THRESHOLD = 0.65
     
     # Perform inference
     results = yolo_prediction(frame)
@@ -49,7 +49,7 @@ def stream_frame():
     return jsonify({'message': 'Frame received', 'width': w, 'height': h, "channels":c, "conf":0, "target_detected":False}), 200
 
 if __name__ == '__main__':
-    app.run(host='10.108.151.62', port=5000, debug=True)
+    app.run(host='127.0.0.1', port=8000, debug=True)
 
 
 

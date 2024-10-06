@@ -4,7 +4,7 @@ import requests
 import base64
 
 # URL de tu API Flask
-url = 'http://10.108.151.62:5000'
+url = 'http://127.0.0.1:8000'
 
 # Inicializa la captura de video
 cap = cv2.VideoCapture(0)

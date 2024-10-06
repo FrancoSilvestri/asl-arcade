@@ -13,5 +13,5 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print("Using device:", device)
 
 model = YOLO("yolov8m.pt")  
-model.train(data=os.path.join("ds", "data.yaml"), imgsz=640, epochs=100)
-model.save('custom_model.pt')
+model.train(data=os.path.join("ds", "data.yaml"), imgsz=640, epochs=100, patience=15)
+model.save('augmented_model.pt')

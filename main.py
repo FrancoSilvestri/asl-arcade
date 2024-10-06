@@ -12,10 +12,10 @@ def yolo_prediction(frame):
 def yolo_streamer():
 
     cap = cv2.VideoCapture(0)
-    weight_path = os.path.join("runs", "detect", "YoloMediumModelTest22", "weights")
+    weight_path = os.path.join("runs", "detect", "augmented_model", "weights")
     model = YOLO(os.path.join(weight_path, "best.pt"))
     CONF_THRESHOLD = 0.65
-    
+    "".replace()
     while True:
         ret, frame = cap.read()
         if not ret:
