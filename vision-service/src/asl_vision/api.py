@@ -12,9 +12,19 @@ from __future__ import annotations
 from flask import Flask, jsonify, request
 
 from . import config
-from .detector import best_match, decode_frame
+from .detector import best_match, decode_frame, load_model
 
 app = Flask(__name__)
+
+
+@app.get("/health")
+def health():
+    """Liveness probe. Reports whether the weights are loadable."""
+    try:
+        load_model()
+    except Exception as exc:  # torch and ultralytics raise a wide range of errors
+        return jsonify({"status": "degraded", "detail": str(exc)}), 503
+    return jsonify({"status": "ok", "threshold": config.CONF_THRESHOLD}), 200
 
 
 @app.post("/detect")
