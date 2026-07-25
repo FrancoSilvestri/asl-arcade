@@ -1,0 +1,24 @@
+# Ultralytics dataset config for the ASL letters dataset.
+#
+# Copy this file to configs/data.yaml and point the three paths at your local
+# copy of the dataset. Paths may be relative to this file.
+#
+# Dataset: American Sign Language Letters v1, Roboflow Universe, Public Domain.
+# https://universe.roboflow.com/david-lee-d0rhs/american-sign-language-letters/dataset/1
+# Export it in "YOLOv8" format, which produces train/ valid/ test/ directories
+# each holding images/ and labels/.
+
+train: ../datasets/asl-letters/train
+val: ../datasets/asl-letters/valid
+test: ../datasets/asl-letters/test
+
+nc: 26
+names: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+
+roboflow:
+  workspace: david-lee-d0rhs
+  project: american-sign-language-letters
+  version: 1
+  license: Public Domain
+  url: https://universe.roboflow.com/david-lee-d0rhs/american-sign-language-letters/dataset/1
