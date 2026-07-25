@@ -1,0 +1,36 @@
+# Model weights: 6 to 52 MB each, fetched from the release instead.
+weights/
+*.pt
+*.onnx
+*.engine
+
+# Datasets and training artifacts, reproducible from configs/data.yaml + train.py
+datasets/
+runs/
+*.zip
+
+# Local dataset config, derived from configs/data.yaml.example
+vision-service/configs/data.yaml
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+
+# Unity
+unity-client/[Ll]ibrary/
+unity-client/[Tt]emp/
+unity-client/[Oo]bj/
+unity-client/[Bb]uild/
+unity-client/[Bb]uilds/
+unity-client/[Ll]ogs/
+unity-client/[Uu]serSettings/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
