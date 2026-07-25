@@ -13,13 +13,14 @@ import cv2
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+from asl_vision import config  # noqa: E402
 from asl_vision.detector import detect  # noqa: E402
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--camera", type=int, default=0)
-    parser.add_argument("--conf", type=float, default=0.65)
+    parser.add_argument("--conf", type=float, default=config.CONF_THRESHOLD)
     args = parser.parse_args()
 
     cap = cv2.VideoCapture(args.camera)

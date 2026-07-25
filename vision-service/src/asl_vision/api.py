@@ -11,9 +11,8 @@ from __future__ import annotations
 
 from flask import Flask, jsonify, request
 
+from . import config
 from .detector import best_match, decode_frame
-
-CONF_THRESHOLD = 0.65
 
 app = Flask(__name__)
 
@@ -30,7 +29,7 @@ def detect_frame():
     target = str(target).strip().upper()
     frame = decode_frame(encoded)
     height, width = frame.shape[:2]
-    match = best_match(frame, target, CONF_THRESHOLD)
+    match = best_match(frame, target, config.CONF_THRESHOLD)
 
     return jsonify({
         "target": target,
@@ -43,7 +42,7 @@ def detect_frame():
 
 
 def main():
-    app.run(host="127.0.0.1", port=8000, debug=True)
+    app.run(host=config.HOST, port=config.PORT, debug=config.DEBUG)
 
 
 if __name__ == "__main__":

@@ -6,14 +6,13 @@ from __future__ import annotations
 
 import base64
 from dataclasses import dataclass
+from functools import lru_cache
+from pathlib import Path
 
 import cv2
 import numpy as np
-from ultralytics import YOLO
 
-WEIGHTS_PATH = "weights/asl-yolov8m.pt"
-
-model = YOLO(WEIGHTS_PATH)
+from . import config
 
 
 @dataclass(frozen=True)
@@ -21,6 +20,24 @@ class Detection:
     label: str
     confidence: float
     box: tuple[int, int, int, int]  # x1, y1, x2, y2
+
+
+@lru_cache(maxsize=1)
+def load_model(weights: Path | None = None):
+    """Load and cache the detector. Import is deferred so that the module can be
+    imported (and the API unit-tested) without pulling in torch."""
+    from ultralytics import YOLO
+
+    path = Path(weights or config.WEIGHTS_PATH)
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Model weights not found at {path}. "
+            "Run scripts/download_weights.py, or point ASL_WEIGHTS at a .pt file."
+        )
+    model = YOLO(str(path))
+    if config.DEVICE:
+        model.to(config.DEVICE)
+    return model
 
 
 def decode_frame(encoded: str) -> np.ndarray:
@@ -34,6 +51,7 @@ def decode_frame(encoded: str) -> np.ndarray:
 
 def detect(frame: np.ndarray, min_confidence: float = 0.0) -> list[Detection]:
     """Run the detector over one frame and return detections above a threshold."""
+    model = load_model()
     detections: list[Detection] = []
     for result in model(frame, verbose=False):
         for box in result.boxes:
