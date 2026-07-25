@@ -12,7 +12,7 @@ from __future__ import annotations
 from flask import Flask, jsonify, request
 
 from . import config
-from .detector import best_match, decode_frame, load_model
+from .detector import FrameDecodeError, best_match, decode_frame, load_model
 
 app = Flask(__name__)
 
@@ -37,7 +37,14 @@ def detect_frame():
         return jsonify({"error": "both 'frame' and 'target' are required"}), 400
 
     target = str(target).strip().upper()
-    frame = decode_frame(encoded)
+    if target not in config.VALID_TARGETS:
+        return jsonify({"error": f"target must be a single letter A-Z, got {target!r}"}), 400
+
+    try:
+        frame = decode_frame(encoded)
+    except FrameDecodeError as exc:
+        return jsonify({"error": str(exc)}), 400
+
     height, width = frame.shape[:2]
     match = best_match(frame, target, config.CONF_THRESHOLD)
 

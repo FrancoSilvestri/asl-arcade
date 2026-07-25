@@ -23,3 +23,5 @@ CONF_THRESHOLD = float(os.getenv("ASL_CONF_THRESHOLD", "0.65"))
 
 # Device passed to Ultralytics: "cuda", "cpu", or a device index.
 DEVICE = os.getenv("ASL_DEVICE", "")
+
+VALID_TARGETS = frozenset("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
