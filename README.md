@@ -13,6 +13,9 @@ the game itself never has to know anything about machine learning.
 the service accepted the sign at its 0.65 threshold, amber means it saw something
 but was not confident enough to commit. [Watch the clip](vision-service/docs/demo.mp4).*
 
+More footage, including the arcade loop being played, is in the project writeup on
+[Franco Silvestri's portfolio](https://francosilvestri.github.io/#projects).
+
 ## How it fits together
 
 ```
@@ -86,6 +89,7 @@ Built at ShellHacks 2024 by a team of three.
 
 - **Daniel Estrada**, Unity 3D arcade client
 - **Franco Silvestri**, ASL detection model and inference service
+  ([portfolio](https://francosilvestri.github.io/), [GitHub](https://github.com/FrancoSilvestri))
 - **Jorge Mario Álvarez**, team support throughout the event
 
 ## Credits
