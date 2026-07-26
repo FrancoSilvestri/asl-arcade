@@ -64,6 +64,31 @@ Returns `200` with the active threshold once the weights load, `503` with a
 `detail` message if they do not. Use it to tell "the model is missing" apart from
 "the service is down".
 
+### `POST /` (legacy)
+
+The Windows build published with this project was compiled in 2024 against an
+earlier version of this service. It posts to the root path and deserialises a
+response shaped like this:
+
+```json
+{
+  "message": "Frame received",
+  "width": 1280,
+  "height": 720,
+  "channels": 3,
+  "conf": 0.81,
+  "target_detected": true
+}
+```
+
+Same request body and same validation rules as `/detect`; only the response
+differs. `conf` is `0` rather than `null` when nothing matched, because that is
+what the client expects.
+
+That build is already distributed, so the server is what adapts. The two
+endpoints share one code path and cannot disagree on a verdict. **New clients
+should use `/detect`.**
+
 ## Layout
 
 ```

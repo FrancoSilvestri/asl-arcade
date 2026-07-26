@@ -34,6 +34,9 @@ class list, and the model can all change without touching the game.
 
 The inference service is in [`vision-service/`](vision-service/), with its own
 [README](vision-service/README.md) covering setup, the API contract, and results.
+The game is documented in [`unity-client/`](unity-client/); its Unity source is not
+part of this repository, but the playable Windows build is attached to the
+[v1.0.0 release](https://github.com/FrancoSilvestri/asl-arcade/releases/tag/v1.0.0).
 
 ## What we shipped in 36 hours
 

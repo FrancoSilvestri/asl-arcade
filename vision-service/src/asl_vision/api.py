@@ -27,26 +27,40 @@ def health():
     return jsonify({"status": "ok", "threshold": config.CONF_THRESHOLD}), 200
 
 
-@app.post("/detect")
-def detect_frame():
+def _score_request():
+    """Validate the payload and score one frame.
+
+    Returns either an error tuple to hand straight back to Flask, or the frame
+    dimensions plus the best match. Both endpoints share this so the two response
+    shapes never drift apart on anything that matters.
+    """
     payload = request.get_json(silent=True) or {}
     encoded = payload.get("frame")
     target = payload.get("target")
 
     if not encoded or not target:
-        return jsonify({"error": "both 'frame' and 'target' are required"}), 400
+        return (jsonify({"error": "both 'frame' and 'target' are required"}), 400), None
 
     target = str(target).strip().upper()
     if target not in config.VALID_TARGETS:
-        return jsonify({"error": f"target must be a single letter A-Z, got {target!r}"}), 400
+        return (jsonify({"error": f"target must be a single letter A-Z, got {target!r}"}), 400), None
 
     try:
         frame = decode_frame(encoded)
     except FrameDecodeError as exc:
-        return jsonify({"error": str(exc)}), 400
+        return (jsonify({"error": str(exc)}), 400), None
 
-    height, width = frame.shape[:2]
-    match = best_match(frame, target, config.CONF_THRESHOLD)
+    height, width, channels = frame.shape
+    return None, (target, width, height, channels,
+                  best_match(frame, target, config.CONF_THRESHOLD))
+
+
+@app.post("/detect")
+def detect_frame():
+    error, scored = _score_request()
+    if error:
+        return error
+    target, width, height, _channels, match = scored
 
     return jsonify({
         "target": target,
@@ -55,6 +69,32 @@ def detect_frame():
         "box": list(match.box) if match else None,
         "width": width,
         "height": height,
+    }), 200
+
+
+@app.post("/")
+def detect_frame_legacy():
+    """The contract the shipped Unity build speaks.
+
+    The Windows build published with this project was compiled in 2024 against an
+    earlier version of this service: it posts to the root path and deserialises a
+    response with `conf` rather than `confidence`. The client is already out in
+    the world, so the server is what adapts.
+
+    New clients should use /detect.
+    """
+    error, scored = _score_request()
+    if error:
+        return error
+    _target, width, height, channels, match = scored
+
+    return jsonify({
+        "message": "Frame received",
+        "width": width,
+        "height": height,
+        "channels": channels,
+        "conf": round(match.confidence, 2) if match else 0,
+        "target_detected": match is not None,
     }), 200
 
 
