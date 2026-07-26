@@ -31,7 +31,9 @@ despite the name nothing about its augmentation differed.
 
 ![Precision-recall curve](pr-curve.png)
 
-Per-epoch numbers are in [`training-results.csv`](training-results.csv).
+Per-epoch numbers are in [`training-results.csv`](training-results.csv). That file
+covers the 32-epoch rerun described above; its first 27 rows are the original
+medium-backbone run, identical value for value.
 
 ## How well this actually generalises
 

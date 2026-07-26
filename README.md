@@ -19,9 +19,9 @@ but was not confident enough to commit. [Watch the clip](vision-service/docs/dem
 Unity 3D client                          Python inference service
 +---------------------+                  +---------------------------+
 | arcade minigames    |                  | Flask                     |
-| webcam capture      | --- POST ------> |   POST /detect            |
-| "sign the letter A" |   base64 JPEG    |   GET  /health            |
-|                     |   + target       |                           |
+| webcam capture      | --- POST / ----> |   POST /   legacy, 2024   |
+| "sign the letter A" |   base64 JPEG    |   POST /detect  canonical |
+|                     |   + target       |   GET  /health            |
 |                     |                  | YOLOv8m, 26 letter classes|
 | correct / try again | <-- JSON ------- | verdict + confidence      |
 +---------------------+                  +---------------------------+
@@ -31,6 +31,9 @@ The client sends one frame and the letter the player was asked for. The service
 answers a single question: is the player making this sign right now, and how
 confident are we? Keeping the verdict on the server side means the threshold, the
 class list, and the model can all change without touching the game.
+
+The published build was compiled in 2024 and posts to the root path, so the service
+still serves that contract there. Anything new should use `/detect`.
 
 The inference service is in [`vision-service/`](vision-service/), with its own
 [README](vision-service/README.md) covering setup, the API contract, and results.
@@ -66,12 +69,16 @@ Full numbers, curves, and the reasoning are in
 ## Repository history
 
 The first four commits are the hackathon code as it was submitted on 29 September
-2024, at their original dates. Everything after them is a later cleanup: the code
-was restructured into a package, the hardcoded venue IP and the committed 370 MB
-of weights and datasets were removed, tests and documentation were added.
+2024, at their original dates. The fifth, a week later, reran the medium backbone
+with a longer early-stopping patience to confirm the run had converged.
 
-The model and the inference path were not changed. What ran at ShellHacks is what
-runs here.
+Everything after that is a 2026 cleanup: the code was restructured into a package,
+the hardcoded venue IP and the committed 377 MB of weights and datasets were
+removed, and tests and documentation were added.
+
+The model and the scoring path were not touched, so the verdict the game gets for a
+given frame is the one it got at ShellHacks. What did change is the shape of the
+JSON around it, which is why the 2024 contract still lives at `POST /`.
 
 ## Team
 

@@ -6,11 +6,15 @@ HTTP for the Unity client.
 ## Setup
 
 ```bash
+cd vision-service
 python -m venv .venv && .venv/Scripts/activate    # source .venv/bin/activate on Linux/macOS
-pip install -r requirements.txt
+pip install -e ".[dev]"
 python scripts/download_weights.py                # 50 MB, from the GitHub release
-python -m asl_vision.api                          # or: PYTHONPATH=src python -m asl_vision.api
+python -m asl_vision.api
 ```
+
+The service comes up on `http://0.0.0.0:8000`. `asl-vision` works as a console
+command too, and `curl localhost:8000/health` tells you whether the weights loaded.
 
 For GPU inference install a CUDA build of torch from
 [pytorch.org](https://pytorch.org) before installing the requirements. The service
